@@ -1,9 +1,9 @@
 import { Button } from "@mui/material";
 import { Product } from "../../app/models/product";
 import { useState, useEffect } from "react";
-import agent from "../../app/api/agent";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import ProductList from "./ProductList";
+import agent from "../../app/api/agent";
 
 
 export default function Catalog() {

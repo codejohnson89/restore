@@ -3,7 +3,7 @@ import agent from "../../app/api/agent";
 import { useState } from "react";
 
 export default function About() {
-    const [validationErrors, setValidationErrors] = useState< []>([])
+    const [validationErrors, setValidationErrors] = useState<string[]>([])
 
     function getValidationError() {
         agent.TestErrors.getValidationError()
