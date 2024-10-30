@@ -61,7 +61,7 @@ const requests = {
 /* The `const Catalog` object is defining two methods: `list` and `details`. */
 const Catalog = {
     list: () => requests.get('Products'),
-    details: (id: string) => requests.get(`Products/${id}`),
+    details: (id: number) => requests.get(`Products/${id}`),
 }
 
 /* The `const TestErrors` object is defining several methods that make HTTP requests to specific
