@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { router } from "../router/Routes";
+import { PaginatedResponse } from "../models/pagination";
 
 const sleep = () => new Promise(resolve => setTimeout(resolve, 500));
 
@@ -18,6 +19,11 @@ const responseBody = (response: AxiosResponse) => response.data;
 
 axios.interceptors.response.use(async response => {
     await sleep();
+    const pagination = response.headers['pagination'];
+    if (pagination) {
+        response.data = new PaginatedResponse(response.data, JSON.parse(pagination));
+        return response;
+    }
     return response;
 }, (error: AxiosError) => {
     const {data, status} = error.response as AxiosResponse;
@@ -52,7 +58,7 @@ axios.interceptors.response.use(async response => {
 Each function corresponds to a different HTTP method (GET, POST, PUT, DELETE) and takes in a URL and
 an optional request body. */
 const requests = {
-    get: (url: string) => axios.get(url).then(responseBody),
+    get: (url: string, params?: URLSearchParams) => axios.get(url, {params}).then(responseBody),
     post: (url: string, body: object) => axios.post(url, body).then(responseBody),
     put: (url: string, body: object) => axios.put(url, body).then(responseBody),
     delete: (url: string) => axios.delete(url).then(responseBody),
@@ -60,8 +66,9 @@ const requests = {
 
 /* The `const Catalog` object is defining two methods: `list` and `details`. */
 const Catalog = {
-    list: () => requests.get('Products'),
+    list: (params: URLSearchParams) => requests.get('Products', params),
     details: (id: number) => requests.get(`Products/${id}`),
+    fetchFilters: () => requests.get('Products/filters'),
 }
 
 /* The `const TestErrors` object is defining several methods that make HTTP requests to specific
