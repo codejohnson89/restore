@@ -1,5 +1,6 @@
 using System.Text;
 using API.Data;
+using API.Entities;
 using API.Extensions;
 using API.Middleware;
 using API.Services;
@@ -52,7 +53,7 @@ builder.Services.AddIdentityCore<User>(opt =>
 {
     opt.User.RequireUniqueEmail = true;
 })
-    .AddRoles<IdentityRole>()
+    .AddRoles<Role>()
     .AddEntityFrameworkStores<StoreContext>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(opt => 
