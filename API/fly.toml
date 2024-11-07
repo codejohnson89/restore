@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for mj-restore on 2024-11-07T08:14:52-06:00
+# fly.toml app configuration file generated for mj-restore on 2024-11-07T10:25:56-06:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -7,6 +7,11 @@ app = 'mj-restore'
 primary_region = 'dfw'
 
 [build]
+  image = 'micahjj1989/restore:latest'
+
+[env]
+  ASPNETCORE_URLS = 'http://+:8080'
+  StripeSettings_PublishableKey='pk_test_51QI1l6BpajbHu6WfMyDHz1IRRvoQNPuIVj11p8HUTOKmZwFWZxBBIzMK9PSW2pXSxlmtbkWuaaMUGY4cGPEHURgH00Zq3oGv55'
 
 [http_service]
   internal_port = 8080
@@ -17,6 +22,6 @@ primary_region = 'dfw'
   processes = ['app']
 
 [[vm]]
-  memory = '1gb'
+  memory = '512mb'
   cpu_kind = 'shared'
   cpus = 1

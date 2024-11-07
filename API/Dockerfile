@@ -1,22 +1,17 @@
-# Adjust DOTNET_OS_VERSION as desired
-ARG DOTNET_OS_VERSION="-alpine"
-ARG DOTNET_SDK_VERSION=8.0
-
-FROM mcr.microsoft.com/dotnet/sdk:${DOTNET_SDK_VERSION}${DOTNET_OS_VERSION} AS build
-WORKDIR /src
-
-# copy everything
-COPY . ./
-# restore as distinct layers
-RUN dotnet restore
-# build and publish a release
-RUN dotnet publish -c Release -o /app
-
-# final stage/image
-FROM mcr.microsoft.com/dotnet/aspnet:${DOTNET_SDK_VERSION}
-ENV ASPNETCORE_URLS http://+:8080
-ENV ASPNETCORE_ENVIRONMENT Production
-EXPOSE 8080
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
 WORKDIR /app
-COPY --from=build /app .
-ENTRYPOINT [ "dotnet", "API.dll" ]
+EXPOSE 8080
+
+# Copy csproj and restore as distinct layers
+COPY *.csproj ./
+RUN dotnet restore
+
+# Copy everything else and build
+COPY . ./
+RUN dotnet publish -c Release -o out
+
+# Build runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
+WORKDIR /app
+COPY --from=build-env /app/out .
+ENTRYPOINT ["dotnet", "API.dll"]
