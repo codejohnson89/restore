@@ -3,7 +3,7 @@ import { useState } from "react";
 
 interface Props {
     items: string[];
-    checked?: string[];
+    checked?: string[] | undefined;
     onChange: (items: string[]) => void;
 }
 

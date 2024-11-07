@@ -2,17 +2,17 @@ import './index.css'
 import { Container, CssBaseline, ThemeProvider, createTheme } from '@mui/material'
 import Header from './Header'
 import { useCallback, useEffect, useState } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import agent from '../api/agent'
-import { getCookie } from '../util/util'
 import LoadingComponent from './LoadingComponent'
 import { useAppDispatch } from '../store/configureStore'
-import { fetchBasketAsync, setBasket } from '../../features/basket/basketSlice'
+import { fetchBasketAsync } from '../../features/basket/basketSlice'
 import { fetchCurrentUser } from '../../features/account/AccountSlice'
+import Home from '../../features/home/Home'
 
 function App() {
+  const location = useLocation();
   const dispatch = useAppDispatch()
   const [loading, setLoading] = useState(true)
 
@@ -45,17 +45,25 @@ useEffect(() => {
     setDarkMode(!darkMode)
   }
 
-  if (loading) return <LoadingComponent message='Loading basket...' />;
-
   return (
     <>
       <ThemeProvider theme={theme}>
-        <ToastContainer position='bottom-right' hideProgressBar theme='colored' />
+        <ToastContainer
+          position="bottom-right"
+          hideProgressBar
+          theme="colored"
+        />
         <CssBaseline />
-        <Header themeChange={handleThemeChange} darkMode={darkMode}/>
-        <Container>
-          <Outlet />
-        </Container>
+        <Header themeChange={handleThemeChange} darkMode={darkMode} />
+        {loading ? (
+          <LoadingComponent message="Loading..." />
+        ) : location.pathname === "/" ? (
+          <Home />
+        ) : (
+          <Container sx={{ mb: 4 }}>
+            <Outlet />
+          </Container>
+        )}
       </ThemeProvider>
     </>
   );
