@@ -22,4 +22,4 @@ jobs:
         with:
           context: "{{defaultContext}}:API"
           push: true
-          tags: micahjj1989/restore:latest
+          tags: micahjj1989/mj-restore:latest
